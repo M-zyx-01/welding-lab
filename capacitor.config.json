@@ -1,0 +1,14 @@
+{
+  "appId": "com.weldinglab.app",
+  "appName": "\u710a\u63a5\u5206\u6790\u5b9e\u9a8c\u5ba4",
+  "webDir": "frontend",
+  "server": {
+    "androidScheme": "https",
+    "hostname": "localhost"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  }
+}
