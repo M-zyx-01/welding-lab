@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#4a9eff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Welding Lab">
+<link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>焊接智能分析实验室 - Welding Intelligence Lab</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header class="toolbar">
+  <span class="logo">焊接智能分析实验室 - Welding Intelligence Lab</span>
+  <span class="logo-sub" id="toolbar-subtitle">多物理场焊接智能分析平台</span>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="zh">中</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="input-panel">
+  <section class="card">
+    <h2>母材 Base Material</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>母材选择 <span class="hint">Base Material</span></label>
+        <select id="sel-base-mat"><option value="">-- 选择母材 Select base --</option></select>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>焊材 Filler Metal <span class="en">(Consumable)</span></h2>
+    <div class="form-group">
+      <label>焊材选择 <span class="hint">Filler Metal</span></label>
+      <select id="sel-filler-mat"><option value="">-- 自熔/不选用 Autogenous --</option></select>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>焊接参数 <span class="en">Weld Parameters</span></h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>焊接工艺 Process</label>
+        <select id="sel-process">
+          <option value="GTAW">钨极氩弧焊 GTAW</option>
+          <option value="GMAW">熔化极气保焊 GMAW</option>
+          <option value="SMAW">手工电弧焊 SMAW</option>
+          <option value="FCAW">药芯焊丝焊 FCAW</option>
+          <option value="SAW">埋弧焊 SAW</option>
+          <option value="PAW">等离子弧焊 PAW</option>
+          <option value="LBW">激光焊 LBW</option>
+          <option value="EBW">电子束焊 EBW</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>极性 Polarity</label>
+        <select id="sel-polarity">
+          <option value="DCEN">直流正接 DCEN</option>
+          <option value="DCEP">直流反接 DCEP</option>
+          <option value="AC">交流 AC</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>电流 Current (A)</label><input type="number" id="inp-current" value="150" step="1" min="10" max="1000"></div>
+      <div class="form-group"><label>电压 Voltage (V)</label><input type="number" id="inp-voltage" value="20" step="0.1" min="5" max="80"></div>
+      <div class="form-group"><label>速度 Speed (mm/s)</label><input type="number" id="inp-speed" value="2" step="0.1" min="0.1" max="50"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>弧效率 Efficiency</label><input type="number" id="inp-efficiency" value="0.75" step="0.01" min="0.1" max="1.0"></div>
+      <div class="form-group"><label>电极直径 Electrode (mm)</label><input type="number" id="inp-electrode" value="2.4" step="0.1" min="0.1" max="10"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>焊枪角度 Torch Angle</label><input type="number" id="inp-torch-angle" value="90" step="1" min="0" max="180"></div>
+      <div class="form-group"><label>行走角度 Travel Angle</label><input type="number" id="inp-travel-angle" value="0" step="1" min="-45" max="45"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>弧长 Arc Length (mm)</label><input type="number" id="inp-arc-length" value="3" step="0.1" min="0.5" max="20"></div>
+      <div class="form-group"><label>干伸长 Stickout (mm)</label><input type="number" id="inp-stickout" value="10" step="0.5" min="2" max="30"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>预热温度 Preheat (C)</label><input type="number" id="inp-preheat" value="25" step="5" min="0" max="600"></div>
+      <div class="form-group"><label>层间温度 Interpass (C)</label><input type="number" id="inp-interpass" value="150" step="5" min="25" max="600"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>接头 <span class="en">Joint Configuration</span></h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>接头类型 Joint Type</label>
+        <select id="sel-joint-type">
+          <option value="butt">对接 Butt</option>
+          <option value="lap">搭接 Lap</option>
+          <option value="tee">T型 Tee</option>
+          <option value="corner">角接 Corner</option>
+          <option value="edge">端接 Edge</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>焊接位置 Position</label>
+        <select id="sel-position">
+          <option value="1G">1G 平焊 Flat</option>
+          <option value="2G">2G 横焊 Horiz</option>
+          <option value="3G">3G 立焊 Vert</option>
+          <option value="4G">4G 仰焊 Overhead</option>
+          <option value="5G">5G 管水平 Pipe H</option>
+          <option value="6G">6G 管斜 Pipe I</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>板厚 Thickness (mm)</label><input type="number" id="inp-thickness" value="10" step="0.5" min="1" max="200"></div>
+      <div class="form-group">
+        <label>坡口 Groove</label>
+        <select id="sel-groove">
+          <option value="V">V型</option>
+          <option value="U">U型</option>
+          <option value="J">J型</option>
+          <option value="square">I型 Square</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>坡口角度 Bevel</label><input type="number" id="inp-bevel" value="30" step="1" min="0" max="60"></div>
+      <div class="form-group"><label>焊道数 Passes</label><input type="number" id="inp-passes" value="3" step="1" min="1" max="50"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>服役环境 <span class="en">Service Environment</span></h2>
+    <select id="sel-environment"></select>
+  </section>
+
+  <div class="actions">
+    <div class="action-row">
+      <button class="btn primary" onclick="runAnalysis()">完整分析 Analyze</button>
+      <button class="btn secondary" onclick="runInference()">交叉推理 Inference</button>
+    </div>
+    <div class="action-row">
+      <button class="btn outline" onclick="runQuickCheck()">快速筛选 Quick</button>
+      <button class="btn outline" onclick="generateReport()">生成报告 Report</button>
+    </div>
+    <hr class="section-divider">
+    <div class="action-row">
+      <button class="btn outline" onclick="runSensitivity()">敏感性 Sensitivity</button>
+      <button class="btn outline" onclick="toggleCompare()">情景对比 Compare</button>
+    </div>
+    <div class="action-row">
+      <button class="btn outline" onclick="saveScenario()">保存场景 Save</button>
+      <button class="btn outline" onclick="toggleScenarios()">加载场景 Load</button>
+    </div>
+    <div class="action-row">
+      <button class="btn outline" onclick="toggleBatch()">批量分析 Batch</button>
+    </div>
+  </div>
+  <div id="status" class="status"></div>
+</aside>
+
+<main class="results-panel" id="results-panel">
+  <div class="empty-state" id="empty-state">
+    <div class="icon-weld">&#9883;</div>
+    <h2>准备就绪 Ready</h2>
+    <p>配置参数并运行分析<br>Configure parameters and run analysis</p>
+    <div class="features-grid" id="features-grid">
+      <div class="feature" data-nav="tab-material"><span class="f-icon">M</span><span>材料 Material</span></div>
+      <div class="feature" data-nav="tab-thermal"><span class="f-icon">T</span><span>热学 Thermal</span></div>
+      <div class="feature" data-nav="tab-mechanical"><span class="f-icon">S</span><span>力学 Stress</span></div>
+      <div class="feature" data-nav="tab-fluid"><span class="f-icon">F</span><span>流体 Fluid</span></div>
+      <div class="feature" data-nav="tab-em"><span class="f-icon">E</span><span>电磁 EM</span></div>
+      <div class="feature" data-nav="tab-env"><span class="f-icon">C</span><span>环境 Env</span></div>
+    </div>
+  </div>
+
+  <div id="results-container" class="hidden">
+    <div class="quality-bar" id="quality-bar"></div>
+    <nav class="tabs" id="tab-nav">
+      <button class="tab active" data-tab="tab-summary">总览 Summary</button>
+      <button class="tab" data-tab="tab-inference">推理 Inference</button>
+      <button class="tab" data-tab="tab-material">材料 Material</button>
+      <button class="tab" data-tab="tab-thermal">热学 Thermal</button>
+      <button class="tab" data-tab="tab-mechanical">力学 Mech</button>
+      <button class="tab" data-tab="tab-fluid">流体 Fluid</button>
+      <button class="tab" data-tab="tab-em">电磁 EM</button>
+      <button class="tab" data-tab="tab-env">环境 Env</button>
+      <button class="tab" data-tab="tab-compare">对比 Comp.</button>
+      <button class="tab" data-tab="tab-sensitivity">敏感性 Sens.</button>
+    </nav>
+    <div class="tab-panels">
+      <div class="tab-panel active" id="tab-summary"></div>
+      <div class="tab-panel" id="tab-inference"></div>
+      <div class="tab-panel" id="tab-material"></div>
+      <div class="tab-panel" id="tab-thermal"></div>
+      <div class="tab-panel" id="tab-mechanical"></div>
+      <div class="tab-panel" id="tab-fluid"></div>
+      <div class="tab-panel" id="tab-em"></div>
+      <div class="tab-panel" id="tab-env"></div>
+      <div class="tab-panel" id="tab-compare"></div>
+      <div class="tab-panel" id="tab-sensitivity"></div>
+    </div>
+  </div>
+</main>
+</div>
+
+<div class="modal hidden" id="report-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>分析报告 Analysis Report</h3>
+      <button class="btn-close" onclick="closeReport()">&times;</button>
+    </div>
+    <pre class="report-body" id="report-body"></pre>
+    <div class="modal-footer">
+      <button class="btn outline small" onclick="copyReport()">复制 Copy</button>
+      <button class="btn outline small" onclick="closeReport()">关闭 Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal hidden" id="batch-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>批量分析 Batch Analysis</h3>
+      <button class="btn-close" onclick="closeBatch()">&times;</button>
+    </div>
+    <div style="padding:12px">
+      <p style="color:var(--text2);font-size:12px;margin-bottom:8px">粘贴CSV Paste CSV (columns: base_material, process, current, voltage, travel_speed, plate_thickness, environment)</p>
+      <textarea id="batch-csv" rows="8" style="width:100%;font-family:var(--mono);font-size:11px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn primary small" onclick="runBatchCSV()">运行 Run</button>
+      <button class="btn outline small" onclick="closeBatch()">关闭 Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/app.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/sw.js').catch(function() {});
+}
+</script>
+
+</body>
+</html>

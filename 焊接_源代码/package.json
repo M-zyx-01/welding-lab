@@ -1,0 +1,20 @@
+{
+  "name": "welding-lab",
+  "version": "1.0.0",
+  "description": "\u710a\u63a5\u667a\u80fd\u5206\u6790\u5b9e\u9a8c\u5ba4 - Multi-Physics Welding Intelligence Platform",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd .. && python -m uvicorn backend.main:app --host 0.0.0.0 --port 8716 --reload",
+    "build:apk": "build_apk.bat",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android"
+  },
+  "keywords": [
+    "welding",
+    "materials",
+    "engineering",
+    "analysis"
+  ],
+  "author": "Welding Intelligence Lab",
+  "license": "MIT"
+}
